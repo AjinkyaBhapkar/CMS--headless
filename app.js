@@ -18,6 +18,10 @@ require('./db/connection');
 const publicRoutes = require('./routes/public');
 app.use('/api/public', publicRoutes);
 
+// Import user routes
+const userRoutes = require('./routes/user');
+app.use('/api/user', userRoutes);
+
 // Start server
 const PORT = process.env.PORT || 5500;
 app.listen(PORT, () => {
