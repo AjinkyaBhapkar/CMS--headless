@@ -14,7 +14,9 @@ app.use(express.json());
 // Import MongoDB connection
 require('./db/connection');
 
-
+// Import public routes
+const publicRoutes = require('./routes/public');
+app.use('/api/public', publicRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5500;
