@@ -22,7 +22,7 @@ async function signup(req, res) {
       }
       userName =
         req.body.firstName.toLowerCase() +
-        req.body.lastName.toLowerCase()  +
+        req.body.lastName.toLowerCase() +
         Math.random().toString(36).substring(2, 5);
     }
 
@@ -49,4 +49,23 @@ async function signup(req, res) {
   }
 }
 
-module.exports = { signup };
+// Define the signin controller
+async function signin(req, res) {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("Invalid email or password.");
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword)
+      return res.status(400).send("Invalid email or password.");
+
+    res.status(200).send({ message: "Logged in successfully" });
+  } catch (err) {
+    res.status(500).send("Internal server error.");
+  }
+}
+
+module.exports = { signup, signin };
