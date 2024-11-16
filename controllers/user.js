@@ -3,12 +3,21 @@ const Project = require('../models/projects');
 // Define the createProject controller
 async function createProject(req, res) {
     try {
+        // Clean the project name
+        const cleanedName = req.body.name
+            .replace(/[^a-zA-Z0-9]/g, '') // Remove non-alphanumeric
+            .replace(/\s+/g, '')          // Remove whitespace
+            .toLowerCase();               // Convert to lowercase
+
+        // Check if project with same name already exists
+        const existingProject = await Project.findOne({ name: cleanedName });
+        if (existingProject) {
+            return res.status(409).send('Project with this name already exists.');
+        }
+
         // Create a new project
         const project = new Project({
-            name: req.body.name,
-            admin: req.body.admin,
-            authors: req.body.authors,
-            apiKeys: req.body.apiKeys
+            name: cleanedName,
         });
 
         // Save the project to the database
